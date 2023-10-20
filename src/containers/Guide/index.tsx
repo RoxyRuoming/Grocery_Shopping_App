@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import {useNavigate} from 'react-router-dom';
-import './style.css';
+import './style.scss';
 
 const Guide = () => {
   // handle the animation logic
