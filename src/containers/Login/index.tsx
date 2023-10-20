@@ -1,7 +1,7 @@
 import './style.scss';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import useRequest from '../../utils/useRequest';
-import Modal from '../../components/Modal';
+import Modal, {ModalInterfaceType} from '../../components/Modal';
 
 // 1. define the return value of the interface
 type ResponseType = {
@@ -9,32 +9,28 @@ type ResponseType = {
 }
 
 const Login = () => {
+  const modalRef = useRef<ModalInterfaceType>(null!);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [passWord, setPassWord] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState("");
 
   const {request} = useRequest<ResponseType>('/a.json','GET', {});
 
   function handleSubmitBtnClick() {
+    if(!phoneNumber) {
+      modalRef.current?.showMessage("phone number should not be empty!")
+      return;
+    } 
+    if (!passWord) {
+      modalRef.current?.showMessage("password should not be empty!")
+      return;
+    }
+
     request().then((data) => {
       console.log(data)
     }).catch((e:any) => {
-      setShowModal(true);
-      setMessage(e?.message || "unknown error");
+      modalRef.current?.showMessage(e?.message || 'unknown error');
     });
   }
-
-  useEffect(() => {
-    if (showModal){
-      const timer = setTimeout(()=> {
-        setShowModal(false);
-      },1500)
-      return () => {
-        clearTimeout(timer);
-      }
-    }
-  }, [showModal])
 
   return (
     <div className="page login-page">
@@ -62,9 +58,7 @@ const Login = () => {
       <p className="notice">
         *Pravacy Policy
       </p>
-      { showModal ? <Modal>{message}</Modal> : null }
-
-      
+     <Modal ref={modalRef}/>
     </div>
   )
 }
