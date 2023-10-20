@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import useRequest from '../../utils/useRequest';
 import Modal, { ModalInterfaceType } from '../../components/Modal';
+import {useNavigate} from 'react-router-dom';
 
 type ResponseType = {
   sussess: boolean;
@@ -13,6 +14,7 @@ const Login = () => {
   const modalRef = useRef<ModalInterfaceType>(null!);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const { request } = useRequest<ResponseType>();
 
@@ -33,7 +35,11 @@ const Login = () => {
         password: password,
       }
     }).then((data) => {
-      data && console.log(data);
+      const {data: {token}} = data;
+      if(token) {
+        localStorage.setItem('token', token);
+        navigate('/home');
+      }
     }).catch((e: any) => {
       modalRef.current?.showMessage(e?.message || 'unknown error');
     });

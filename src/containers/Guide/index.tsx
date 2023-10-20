@@ -12,7 +12,11 @@ const Guide = () => {
   // handle the click/navigation logic
   const navigate = useNavigate();
   const handleIconClick = () => {
-    navigate('./account/login');
+    if(localStorage.getItem('token')) {
+      navigate('/home');
+    } else {
+      navigate('./account/login');
+    }
   };
 
   return (

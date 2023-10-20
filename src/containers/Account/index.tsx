@@ -1,11 +1,20 @@
+import { useEffect } from 'react';
 import './style.scss';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const Account = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isLoginActivated = location.pathname === '/account/login';
   const loginActiveClass = isLoginActivated? 'tab-item-active' : '';
   const registerActiveClass = !isLoginActivated? 'tab-item-active': '';
+
+  // if user has logged in, redirect to the home page
+  useEffect(() => {
+    if(localStorage.getItem('token')){
+      navigate('/home');
+    }
+  }, [navigate])
 
   return (
     <div className="page account-page">

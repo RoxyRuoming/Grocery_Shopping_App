@@ -8,6 +8,7 @@ import Guide from './containers/Guide';
 import Login from './containers/Account/login';
 import Register from './containers/Account/register';
 import Account from './containers/Account';
+import Home from './containers/Home';
 
 // json-style router
 const Router = createHashRouter([{
@@ -24,11 +25,8 @@ const Router = createHashRouter([{
     element: <Register />
   }]
 }, {
-  path: '/login',
-  element: <Login />
-}, {
-  path: '/register',
-  element: <Register />
+  path: '/home',
+  element: <Home />
 }])
 
 const App = () => {
