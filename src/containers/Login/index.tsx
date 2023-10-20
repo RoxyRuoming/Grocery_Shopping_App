@@ -1,6 +1,7 @@
 import './style.scss';
 import { useEffect, useState } from 'react';
 import useRequest from '../../utils/useRequest';
+import Modal from '../../components/Modal';
 
 // 1. define the return value of the interface
 type ResponseType = {
@@ -10,21 +11,30 @@ type ResponseType = {
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [passWord, setPassWord] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState("");
 
-  // 2. use <T> pass the type to the function/hook (useRequest)
-  // 5. the type of recieved data is "ResponseType | null" (T | null)
-  const {data, error, loaded, request,cancel} = useRequest<ResponseType>('/a.json','GET', {});
+  const {request} = useRequest<ResponseType>('/a.json','GET', {});
 
   function handleSubmitBtnClick() {
-    request();
-    // cancel();
+    request().then((data) => {
+      console.log(data)
+    }).catch((e:any) => {
+      setShowModal(true);
+      setMessage(e?.message || "unknown error");
+    });
   }
 
-  // avoid repeated rendering
   useEffect(() => {
-    if(data) {alert("success");}
-    if(error) {alert('failure');}
-  }, [data, error])
+    if (showModal){
+      const timer = setTimeout(()=> {
+        setShowModal(false);
+      },1500)
+      return () => {
+        clearTimeout(timer);
+      }
+    }
+  }, [showModal])
 
   return (
     <div className="page login-page">
@@ -52,6 +62,9 @@ const Login = () => {
       <p className="notice">
         *Pravacy Policy
       </p>
+      { showModal ? <Modal>{message}</Modal> : null }
+
+      
     </div>
   )
 }
