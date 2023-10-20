@@ -1,35 +1,30 @@
-import axios from 'axios';
-import { useState } from 'react';
 import './style.scss';
+import { useEffect, useState } from 'react';
+import useRequest from '../../utils/useRequest';
+
+// 1. define the return value of the interface
+type ResponseType = {
+  name: String;
+}
 
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [passWord, setPassWord] = useState('');
 
-  // concepts related with sending requests
-  const [data, setData] = useState(null);
-  const [error, setError] = useState('');
-  const [loaded, setLoaded] = useState(false);
+  // 2. use <T> pass the type to the function/hook (useRequest)
+  // 5. the type of recieved data is "ResponseType | null" (T | null)
+  const {data, error, loaded, request,cancel} = useRequest<ResponseType>('/a.json','GET', {});
 
   function handleSubmitBtnClick() {
-    axios.get('/a.json').then((response) => {
-      setLoaded(true);
-      setData(response.data);
-    }).catch((error) => {
-      console.log(error);
-      setLoaded(true);
-      setError(error.message)
-    })
+    request();
+    // cancel();
   }
 
-  if(loaded) {
-    if(data) {
-      setLoaded(false);
-      alert('success to load');
-    } else {
-      alert('fail to load');
-    }
-  }
+  // avoid repeated rendering
+  useEffect(() => {
+    if(data) {alert("success");}
+    if(error) {alert('failure');}
+  }, [data, error])
 
   return (
     <div className="page login-page">
