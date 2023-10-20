@@ -12,7 +12,7 @@ const Guide = () => {
   // handle the click/navigation logic
   const navigate = useNavigate();
   const handleIconClick = () => {
-    navigate('./login');
+    navigate('./account/login');
   };
 
   return (

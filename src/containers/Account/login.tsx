@@ -1,6 +1,4 @@
-import './style.scss';
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import useRequest from '../../utils/useRequest';
 import Modal, { ModalInterfaceType } from '../../components/Modal';
 
@@ -13,17 +11,17 @@ type ResponseType = {
 
 const Login = () => {
   const modalRef = useRef<ModalInterfaceType>(null!);
-  const [ phoneNumber, setPhoneNumber ] = useState('');
-  const [ password, setPassword ] = useState('');
-  
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+
   const { request } = useRequest<ResponseType>();
 
   function handleSubmitBtnClick() {
-    if(!phoneNumber) {
+    if (!phoneNumber) {
       modalRef.current.showMessage('phone number should not be empty!');
       return;
     }
-    if(!password) {
+    if (!password) {
       modalRef.current.showMessage('password should not be empty!');
       return;
     }
@@ -42,13 +40,7 @@ const Login = () => {
   }
 
   return (
-    <div className="page login-page">
-      <div className="tab">
-        <div className='tab-item tab-item-left'>Log In</div>
-        <div className='tab-item tab-item-right'>
-          <Link to='/register'>Register</Link>
-        </div>
-      </div>
+    <>
       <div className="form">
         <div className='form-item'>
           <div className='form-item-title'>Phone Number</div>
@@ -77,7 +69,7 @@ const Login = () => {
         *Privacy Policy
       </p>
       <Modal ref={modalRef} />
-    </div>
+    </>
   )
 }
 

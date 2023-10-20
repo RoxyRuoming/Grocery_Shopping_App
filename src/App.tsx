@@ -2,23 +2,39 @@ import 'normalize.css';
 import './styles/base.css';
 import './styles/border.css';
 
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 
 import Guide from './containers/Guide';
-import Login from './containers/Login';
-import Register from './containers/Register';
+import Login from './containers/Account/login';
+import Register from './containers/Account/register';
+import Account from './containers/Account';
 
+// json-style router
+const Router = createHashRouter([{
+  path: '/',
+  element: <Guide />
+}, {
+  path: '/account',
+  element: <Account />,
+  children: [{
+    path: '/account/login',
+    element: <Login />
+  }, {
+    path: '/account/register',
+    element: <Register />
+  }]
+}, {
+  path: '/login',
+  element: <Login />
+}, {
+  path: '/register',
+  element: <Register />
+}])
 
 const App = () => {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path='/' element={<Guide />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-      </Routes>
-      </HashRouter>
+    <RouterProvider router={Router} />
   )
 }
 
-      export default App;
+export default App;

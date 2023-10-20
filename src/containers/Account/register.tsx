@@ -1,6 +1,4 @@
-import './style.scss';
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import useRequest from '../../utils/useRequest';
 import Modal, { ModalInterfaceType } from '../../components/Modal';
 
@@ -11,31 +9,31 @@ type ResponseType = {
 
 const Register = () => {
   const modalRef = useRef<ModalInterfaceType>(null!);
-  const [ userName, setUserName ] = useState('');
-  const [ phoneNumber, setPhoneNumber ] = useState('');
-  const [ password, setPassword ] = useState('');
-  const [ checkPassword, setCheckPassword ] = useState('');
-  
+  const [userName, setUserName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [checkPassword, setCheckPassword] = useState('');
+
   const { request } = useRequest<ResponseType>();
 
   function handleSubmitBtnClick() {
-    if(!userName) {
+    if (!userName) {
       modalRef.current.showMessage('username should not be empty!');
       return;
     }
-    if(!phoneNumber) {
+    if (!phoneNumber) {
       modalRef.current.showMessage('phone number should not be empty!');
       return;
     }
-    if(!password) {
+    if (!password) {
       modalRef.current.showMessage('password should not be empty!');
       return;
     }
-    if(password.length < 6) {
+    if (password.length < 6) {
       modalRef.current.showMessage('password should be at least 6 digits! ');
       return;
     }
-    if(password !== checkPassword) {
+    if (password !== checkPassword) {
       modalRef.current.showMessage('passwords inconsistency! ');
       return;
     }
@@ -55,13 +53,7 @@ const Register = () => {
   }
 
   return (
-    <div className="page register-page">
-      <div className="tab">
-        <div className='tab-item tab-item-left'>
-          <Link to='/login'>Log In</Link>
-        </div>
-        <div className='tab-item tab-item-right'>Register</div>
-      </div>
+    <>
       <div className="form">
         <div className='form-item'>
           <div className='form-item-title'>Username</div>
@@ -106,7 +98,7 @@ const Register = () => {
         Register
       </div>
       <Modal ref={modalRef} />
-    </div>
+    </>
   )
 }
 
