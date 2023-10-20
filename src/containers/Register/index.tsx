@@ -5,20 +5,24 @@ import useRequest from '../../utils/useRequest';
 import Modal, { ModalInterfaceType } from '../../components/Modal';
 
 type ResponseType = {
-  sussess: boolean;
-  data: {
-    token: string;
-  }
+  success: boolean;
+  data: boolean;
 }
 
-const Login = () => {
+const Register = () => {
   const modalRef = useRef<ModalInterfaceType>(null!);
+  const [ userName, setUserName ] = useState('');
   const [ phoneNumber, setPhoneNumber ] = useState('');
   const [ password, setPassword ] = useState('');
+  const [ checkPassword, setCheckPassword ] = useState('');
   
   const { request } = useRequest<ResponseType>();
 
   function handleSubmitBtnClick() {
+    if(!userName) {
+      modalRef.current.showMessage('username should not be empty!');
+      return;
+    }
     if(!phoneNumber) {
       modalRef.current.showMessage('phone number should not be empty!');
       return;
@@ -27,10 +31,19 @@ const Login = () => {
       modalRef.current.showMessage('password should not be empty!');
       return;
     }
+    if(password.length < 6) {
+      modalRef.current.showMessage('password should be at least 6 digits! ');
+      return;
+    }
+    if(password !== checkPassword) {
+      modalRef.current.showMessage('passwords inconsistency! ');
+      return;
+    }
     request({
-      url: '/login.json',
+      url: '/register.json',
       method: 'POST',
       data: {
+        user: userName,
         phone: phoneNumber,
         password: password,
       }
@@ -42,14 +55,23 @@ const Login = () => {
   }
 
   return (
-    <div className="page login-page">
+    <div className="page register-page">
       <div className="tab">
-        <div className='tab-item tab-item-left'>Log In</div>
-        <div className='tab-item tab-item-right'>
-          <Link to='/register'>Register</Link>
+        <div className='tab-item tab-item-left'>
+          <Link to='/login'>Log In</Link>
         </div>
+        <div className='tab-item tab-item-right'>Register</div>
       </div>
       <div className="form">
+        <div className='form-item'>
+          <div className='form-item-title'>Username</div>
+          <input
+            value={userName}
+            className='form-item-content'
+            placeholder='please input your username'
+            onChange={(e) => { setUserName(e.target.value) }}
+          />
+        </div>
         <div className='form-item'>
           <div className='form-item-title'>Phone Number</div>
           <input
@@ -69,16 +91,23 @@ const Login = () => {
             onChange={(e) => { setPassword(e.target.value) }}
           />
         </div>
+        <div className='form-item'>
+          <div className='form-item-title'>Comfirm Password</div>
+          <input
+            value={checkPassword}
+            type="password"
+            className='form-item-content'
+            placeholder='please comfirm your password'
+            onChange={(e) => { setCheckPassword(e.target.value) }}
+          />
+        </div>
       </div>
       <div className="submit" onClick={handleSubmitBtnClick}>
-        Log In
+        Register
       </div>
-      <p className="notice">
-        *Privacy Policy
-      </p>
       <Modal ref={modalRef} />
     </div>
   )
 }
 
-export default Login;
+export default Register;

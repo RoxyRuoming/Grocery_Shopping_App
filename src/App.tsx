@@ -6,6 +6,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import Guide from './containers/Guide';
 import Login from './containers/Login';
+import Register from './containers/Register';
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Guide />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
       </Routes>
       </HashRouter>
   )
