@@ -1,33 +1,38 @@
 import './style.scss';
 import { useRef, useState } from 'react';
 import useRequest from '../../utils/useRequest';
-import Modal, {ModalInterfaceType} from '../../components/Modal';
+import Modal, { ModalInterfaceType } from '../../components/Modal';
 
-// 1. define the return value of the interface
 type ResponseType = {
-  name: String;
+  name: string;
 }
 
 const Login = () => {
   const modalRef = useRef<ModalInterfaceType>(null!);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [passWord, setPassWord] = useState('');
-
-  const {request} = useRequest<ResponseType>('/a.json','GET', {});
+  const [ phoneNumber, setPhoneNumber ] = useState('');
+  const [ password, setPassword ] = useState('');
+  
+  const { request } = useRequest<ResponseType>();
 
   function handleSubmitBtnClick() {
     if(!phoneNumber) {
-      modalRef.current?.showMessage("phone number should not be empty!")
-      return;
-    } 
-    if (!passWord) {
-      modalRef.current?.showMessage("password should not be empty!")
+      modalRef.current.showMessage('phone number should not be empty!');
       return;
     }
-
-    request().then((data) => {
-      console.log(data)
-    }).catch((e:any) => {
+    if(!password) {
+      modalRef.current.showMessage('password should not be empty!');
+      return;
+    }
+    request({
+      url: '/login.json',
+      method: 'POST',
+      data: {
+        phone: phoneNumber,
+        password: password,
+      }
+    }).then((data) => {
+      data && console.log(data.name);
+    }).catch((e: any) => {
       modalRef.current?.showMessage(e?.message || 'unknown error');
     });
   }
@@ -40,25 +45,32 @@ const Login = () => {
       </div>
       <div className="form">
         <div className='form-item'>
-          <div className='form-item-title'>Phone</div>
-          <input value={phoneNumber} className='form-item-content' 
-          placeholder='Please input your phone number' 
-          onChange={(e) => {setPhoneNumber(e.target.value)}}/>
+          <div className='form-item-title'>Phone Number</div>
+          <input
+            value={phoneNumber}
+            className='form-item-content'
+            placeholder='Please input your phone number'
+            onChange={(e) => { setPhoneNumber(e.target.value) }}
+          />
         </div>
         <div className='form-item'>
           <div className='form-item-title'>Password</div>
-          <input value={passWord} type="password" className='form-item-content' 
-          placeholder='please input your password' 
-          onChange={(e) => {setPassWord(e.target.value)}}/>
+          <input
+            value={password}
+            type="password"
+            className='form-item-content'
+            placeholder='Please input your password'
+            onChange={(e) => { setPassword(e.target.value) }}
+          />
         </div>
       </div>
       <div className="submit" onClick={handleSubmitBtnClick}>
         Log In
       </div>
       <p className="notice">
-        *Pravacy Policy
+        *Privacy Policy
       </p>
-     <Modal ref={modalRef}/>
+      <Modal ref={modalRef} />
     </div>
   )
 }

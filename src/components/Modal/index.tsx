@@ -1,18 +1,8 @@
-import { forwardRef, useImperativeHandle, useState } from 'react';
 import './style.scss';
 
-// useEffect(() => {
-//   if(showModal) {
-//     const timer = setTimeout(() => {
-//       setShowModal(false);
-//     }, 1500);
-//     return () => {
-//       clearTimeout(timer);
-//     }
-//   }
-// }, [showModal])
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-// modal -  TS type
 export type ModalInterfaceType = {
   showMessage: (message: string) => void
 }
@@ -20,6 +10,8 @@ export type ModalInterfaceType = {
 const Modal = forwardRef<ModalInterfaceType>((props, ref)=> {
   const [ showModal, setShowModal] = useState(false);
   const [ message, setMessage] = useState('');
+  const divRef = useRef(document.createElement('div'));
+  const divElement = divRef.current;
 
   useImperativeHandle(ref, () => {
     return {
@@ -31,13 +23,28 @@ const Modal = forwardRef<ModalInterfaceType>((props, ref)=> {
         }, 1500)
       }
     }
-  }, [])
+  }, []);
 
-  return showModal ? (
+  useEffect(() => {
+    if(showModal) {
+      document.body.appendChild(divElement);
+    }else {
+      if(divElement.parentNode) {
+        document.body.removeChild(divElement);
+      }
+    }
+    return () => {
+      if(divElement.parentNode) {
+        document.body.removeChild(divElement);
+      }
+    }
+  }, [showModal, divElement])
+
+  return createPortal(
     <div className="modal">
       <div className="modal-text">{message}</div>
     </div>
-  ): null;
+  , divElement)
 }
 );
 export default Modal;
