@@ -1,10 +1,44 @@
 import 'swiper/css';
 import './style.scss';
-import { useState } from 'react';
-import { Swiper, SwiperSlide} from 'swiper/react';
+import { useEffect, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+const localLocation = localStorage.getItem('location');
+const locationHistory = localLocation  ? JSON.parse(localLocation) : null;
+
+// default request data
+const defaultRequestedData = {
+  url: '/home.json',
+  method: 'POST',
+  data: {
+    latitude: locationHistory ? locationHistory.latitude:37.7304167,
+    longitude: locationHistory ? locationHistory.longitude:-122.384425,
+  }
+}
 
 const Home = () => {
-  const [ page, setPage ] = useState(1);
+  const [requestData, setRequestData] = useState(defaultRequestedData);
+
+  useEffect(() => {
+    if (navigator.geolocation && !localLocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { coords } = position;
+        const { latitude, longitude } = coords;
+        localStorage.setItem('location', JSON.stringify({
+          latitude, longitude 
+        }));
+        // console.log(latitude, longitude);
+        setRequestData({
+          ...defaultRequestedData,
+          data: { latitude, longitude }
+        })
+      }, (error) => {
+        console.log(error);
+      }, { timeout: 3000 })
+    }
+  }, []);
+
+  const [page, setPage] = useState(1);
   return (
     <div className='page home-page'>
       <div className='banner'>
@@ -22,21 +56,21 @@ const Home = () => {
           <Swiper
             spaceBetween={0}
             slidesPerView={1}
-            onSlideChange={(e:any) => setPage(e.activeIndex + 1)}
+            onSlideChange={(e: any) => setPage(e.activeIndex + 1)}
           >
             <SwiperSlide>
               <div className='swiper-item'>
-                <img className='swiper-item-img' src={require('../../images/tomato.png')} alt='carousel'/>
+                <img className='swiper-item-img' src={require('../../images/tomato.png')} alt='carousel' />
               </div>
             </SwiperSlide>
             <SwiperSlide>
               <div className='swiper-item'>
-                <img className='swiper-item-img' src={require('../../images/lemon.png')} alt='carousel'/>
+                <img className='swiper-item-img' src={require('../../images/lemon.png')} alt='carousel' />
               </div>
             </SwiperSlide>
             <SwiperSlide>
               <div className='swiper-item'>
-                <img className='swiper-item-img' src={require('../../images/salad.png')} alt='轮carousel'/>
+                <img className='swiper-item-img' src={require('../../images/salad.png')} alt='轮carousel' />
               </div>
             </SwiperSlide>
           </Swiper>
