@@ -1,13 +1,14 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import axios, { AxiosRequestConfig } from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import { message } from '../utils/message';
 
 const defaultRequestedConfig = {
   url: '/', method: 'GET', data: {}, params: {}
 }
 
-function useRequest<T>(options: AxiosRequestConfig = defaultRequestedConfig) {
+// the default value of boolean is false
+function useRequest<T>(options: AxiosRequestConfig & {manual?: boolean} = defaultRequestedConfig) {
   const [ data, setData ] = useState<T | null>(null);
   const [ error, setError ] = useState('');
   const [ loaded, setLoaded ] = useState(false);
@@ -19,7 +20,7 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestedConfig) {
   }
 
   // useCallback is used to cache data
-  const request = useCallback((requestOptions?: AxiosRequestConfig) => {
+  const request = useCallback((requestOptions: AxiosRequestConfig) => {
     // clear previous data
     setData(null);
     setError('');
@@ -32,11 +33,11 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestedConfig) {
     } : {};
 
     return axios.request<T>({
-      url: requestOptions?.url || options.url,
-      method: requestOptions?.method || options.method,
+      url: requestOptions.url,
+      method: requestOptions?.method,
       signal: controllerRef.current.signal,
-      data: requestOptions?.data || options.data,
-      params: requestOptions?.params || options.params,
+      data: requestOptions.data,
+      params: requestOptions.params,
       headers
     }).then(response => {
       setData(response.data);
@@ -51,7 +52,15 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestedConfig) {
     }).finally(() => {
       setLoaded(true);
     });
-  }, [navigate, options])
+  }, [navigate])
+
+  useEffect(() => {
+    if (!options.manual) {
+      request(options).catch(e => {
+        message(e?.message);
+      });
+    }
+  }, [options, request])
 
   return { data, error, loaded, request, cancel }
 }

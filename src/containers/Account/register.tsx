@@ -1,13 +1,8 @@
-import { useRef, useState } from 'react';
+import type { RegisterResponseType } from './types';
+import { useState } from 'react';
 import useRequest from '../../hooks/useRequest';
 import { message } from '../../utils/message';
-import { Navigate, useNavigate } from 'react-router-dom';
-
-
-type ResponseType = {
-  success: boolean;
-  data: boolean;
-}
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [userName, setUserName] = useState('');
@@ -17,7 +12,7 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const { request } = useRequest<ResponseType>();
+  const { request } = useRequest<RegisterResponseType>({ manual: true });
 
   function handleSubmitBtnClick() {
     if (!userName) {
@@ -49,7 +44,7 @@ const Register = () => {
         password: password,
       }
     }).then((data) => {
-      if(data?.success) {
+      if (data?.success) {
         // console.log(data); this is a way to debug
         navigate('/account/login');
       }

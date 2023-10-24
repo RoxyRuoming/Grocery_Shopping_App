@@ -1,21 +1,15 @@
-import { useRef, useState } from 'react';
+import type { LoginResponseType } from './types';
+import { useState } from 'react';
 import useRequest from '../../hooks/useRequest';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { message } from '../../utils/message';
-
-type ResponseType = {
-  sussess: boolean;
-  data: {
-    token: string;
-  }
-}
 
 const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const { request } = useRequest<ResponseType>();
+  const { request } = useRequest<LoginResponseType>({ manual: true });
 
   function handleSubmitBtnClick() {
     if (!phoneNumber) {
@@ -34,8 +28,8 @@ const Login = () => {
         password: password,
       }
     }).then((data) => {
-      const {data: {token}} = data;
-      if(token) {
+      const { data: { token } } = data;
+      if (token) {
         localStorage.setItem('token', token);
         navigate('/home');
       }

@@ -1,10 +1,9 @@
 import 'swiper/css';
 import './style.scss';
-import { useEffect, useRef, useState } from 'react';
+import type {ResponseType} from './types';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useRequest from '../../hooks/useRequest';
-
-import { message } from '../../utils/message';
 
 const localLocation = localStorage.getItem('location');
 const locationHistory = localLocation  ? JSON.parse(localLocation) : null;
@@ -21,16 +20,9 @@ const defaultRequestedData = {
 
 const Home = () => {
   const [requestData, setRequestData] = useState(defaultRequestedData);
-  const {request} = useRequest(requestData);
+  const {data} = useRequest<ResponseType>(requestData);
 
-
-  useEffect(() => {
-    request().then((data) => {
-      console.log(data);
-    }).catch(e => {
-      message(e?.message); // default timeout is 1500s
-    })
-  }, [requestData, request])
+  // console.log(data);
 
   useEffect(() => {
     if (navigator.geolocation && !localLocation) {
@@ -57,7 +49,7 @@ const Home = () => {
       <div className='banner'>
         <h3 className='location'>
           <span className='iconfont'>&#xe67c;</span>
-          Organic Fruits (Seattle)
+          {data?.data.location.address || ''}
         </h3>
         <div className='search'>
           <span className='iconfont'>
@@ -71,23 +63,19 @@ const Home = () => {
             slidesPerView={1}
             onSlideChange={(e: any) => setPage(e.activeIndex + 1)}
           >
-            <SwiperSlide>
-              <div className='swiper-item'>
-                <img className='swiper-item-img' src={require('../../images/tomato.png')} alt='carousel' />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className='swiper-item'>
-                <img className='swiper-item-img' src={require('../../images/lemon.png')} alt='carousel' />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className='swiper-item'>
-                <img className='swiper-item-img' src={require('../../images/salad.png')} alt='轮carousel' />
-              </div>
-            </SwiperSlide>
+            {
+              (data?.data.banners || []).map(item => {
+                return (
+                  <SwiperSlide key={item.id}>
+                  <div className='swiper-item'>
+                    <img className='swiper-item-img' src={item.url} alt='carousel' />
+                  </div>
+                </SwiperSlide>
+                )
+              })
+            }
           </Swiper>
-          <div className='pagination'>{page}/2</div>
+          <div className='pagination'>{page}/{data?.data.banners.length || 0}</div>
         </div>
       </div>
     </div>
