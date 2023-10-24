@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
-import useRequest from '../../utils/useRequest';
-import Modal, { ModalInterfaceType } from '../../components/Modal';
+import useRequest from '../../hooks/useRequest';
+import { message } from '../../utils/message';
+import { Navigate, useNavigate } from 'react-router-dom';
+
 
 type ResponseType = {
   success: boolean;
@@ -8,33 +10,34 @@ type ResponseType = {
 }
 
 const Register = () => {
-  const modalRef = useRef<ModalInterfaceType>(null!);
   const [userName, setUserName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [checkPassword, setCheckPassword] = useState('');
 
+  const navigate = useNavigate();
+
   const { request } = useRequest<ResponseType>();
 
   function handleSubmitBtnClick() {
     if (!userName) {
-      modalRef.current.showMessage('username should not be empty!');
+      message('username should not be empty!');
       return;
     }
     if (!phoneNumber) {
-      modalRef.current.showMessage('phone number should not be empty!');
+      message('phone number should not be empty!');
       return;
     }
     if (!password) {
-      modalRef.current.showMessage('password should not be empty!');
+      message('password should not be empty!');
       return;
     }
     if (password.length < 6) {
-      modalRef.current.showMessage('password should be at least 6 digits! ');
+      message('password should be at least 6 digits! ');
       return;
     }
     if (password !== checkPassword) {
-      modalRef.current.showMessage('passwords inconsistency! ');
+      message('passwords inconsistency! ');
       return;
     }
     request({
@@ -46,9 +49,12 @@ const Register = () => {
         password: password,
       }
     }).then((data) => {
-      data && console.log(data);
+      if(data?.success) {
+        // console.log(data); this is a way to debug
+        navigate('/account/login');
+      }
     }).catch((e: any) => {
-      modalRef.current?.showMessage(e?.message || 'unknown error');
+      message(e?.message || 'unknown error');
     });
   }
 
@@ -97,7 +103,6 @@ const Register = () => {
       <div className="submit" onClick={handleSubmitBtnClick}>
         Register
       </div>
-      <Modal ref={modalRef} />
     </>
   )
 }

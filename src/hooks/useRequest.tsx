@@ -1,10 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import axios, { AxiosRequestConfig } from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function useRequest<T>(options: AxiosRequestConfig = {
+
+const defaultRequestedConfig = {
   url: '/', method: 'GET', data: {}, params: {}
-}) {
+}
+
+function useRequest<T>(options: AxiosRequestConfig = defaultRequestedConfig) {
   const [ data, setData ] = useState<T | null>(null);
   const [ error, setError ] = useState('');
   const [ loaded, setLoaded ] = useState(false);
@@ -15,7 +18,8 @@ function useRequest<T>(options: AxiosRequestConfig = {
     controllerRef.current.abort();
   }
 
-  const request = (requestOptions?: AxiosRequestConfig) => {
+  // useCallback is used to cache data
+  const request = useCallback((requestOptions?: AxiosRequestConfig) => {
     // clear previous data
     setData(null);
     setError('');
@@ -47,7 +51,7 @@ function useRequest<T>(options: AxiosRequestConfig = {
     }).finally(() => {
       setLoaded(true);
     });
-  }
+  }, [navigate, options])
 
   return { data, error, loaded, request, cancel }
 }

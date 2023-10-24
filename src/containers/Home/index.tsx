@@ -1,7 +1,10 @@
 import 'swiper/css';
 import './style.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import useRequest from '../../hooks/useRequest';
+
+import { message } from '../../utils/message';
 
 const localLocation = localStorage.getItem('location');
 const locationHistory = localLocation  ? JSON.parse(localLocation) : null;
@@ -18,6 +21,16 @@ const defaultRequestedData = {
 
 const Home = () => {
   const [requestData, setRequestData] = useState(defaultRequestedData);
+  const {request} = useRequest(requestData);
+
+
+  useEffect(() => {
+    request().then((data) => {
+      console.log(data);
+    }).catch(e => {
+      message(e?.message); // default timeout is 1500s
+    })
+  }, [requestData, request])
 
   useEffect(() => {
     if (navigator.geolocation && !localLocation) {

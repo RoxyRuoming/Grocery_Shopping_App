@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
-import useRequest from '../../utils/useRequest';
-import Modal, { ModalInterfaceType } from '../../components/Modal';
+import useRequest from '../../hooks/useRequest';
 import {useNavigate} from 'react-router-dom';
+import { message } from '../../utils/message';
 
 type ResponseType = {
   sussess: boolean;
@@ -11,7 +11,6 @@ type ResponseType = {
 }
 
 const Login = () => {
-  const modalRef = useRef<ModalInterfaceType>(null!);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -20,11 +19,11 @@ const Login = () => {
 
   function handleSubmitBtnClick() {
     if (!phoneNumber) {
-      modalRef.current.showMessage('phone number should not be empty!');
+      message('phone number should not be empty!');
       return;
     }
     if (!password) {
-      modalRef.current.showMessage('password should not be empty!');
+      message('password should not be empty!');
       return;
     }
     request({
@@ -41,7 +40,7 @@ const Login = () => {
         navigate('/home');
       }
     }).catch((e: any) => {
-      modalRef.current?.showMessage(e?.message || 'unknown error');
+      message(e?.message || 'unknown error');
     });
   }
 
@@ -74,7 +73,6 @@ const Login = () => {
       <p className="notice">
         *Privacy Policy
       </p>
-      <Modal ref={modalRef} />
     </>
   )
 }
