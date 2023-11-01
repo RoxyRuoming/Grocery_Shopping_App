@@ -58,6 +58,7 @@
   .category {
     position: relative;
     margin-top: -.2rem;
+    height: 1.92rem;
     display: flex;
     flex-wrap: wrap;
     font-size: .12rem;
@@ -81,6 +82,7 @@
     }
   }
   .card {
+    height: 2.6rem;
     margin-top: .1rem;
     background: #FFF;
     font-size: .12rem;
