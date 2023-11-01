@@ -10,14 +10,13 @@ input:-webkit-autofill:active {
   -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
 }
 @font-face {
-  font-family: "iconfont"; /* Project id 4095881 */
-  src: url('//at.alicdn.com/t/c/font_4095881_mpqdmifee7j.woff2?t=1685459660067') format('woff2'),
-       url('//at.alicdn.com/t/c/font_4095881_mpqdmifee7j.woff?t=1685459660067') format('woff'),
-       url('//at.alicdn.com/t/c/font_4095881_mpqdmifee7j.ttf?t=1685459660067') format('truetype');
+  font-family: 'iconfont';  /* Project id 4095881 */
+  src: url('//at.alicdn.com/t/c/font_4095881_0r8t1h6vc1mo.woff2?t=1688037717150') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4095881_0r8t1h6vc1mo.woff?t=1688037717150') format('woff'),
+       url('//at.alicdn.com/t/c/font_4095881_0r8t1h6vc1mo.ttf?t=1688037717150') format('truetype');
 }
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
