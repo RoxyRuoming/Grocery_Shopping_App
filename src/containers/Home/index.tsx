@@ -54,7 +54,7 @@ const Home = () => {
 
   return (
     <div className='page home-page'>
-      <Banner location={location} banners={banners}/>
+      <Banner location={location} banners={banners} />
       <Categories categories={categories}/>
       <Card title='New!' list={freshes}/>
       <div className='bottom'>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { BannersType, LocationType } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 type BannerPropsType = {
     location: LocationType | undefined;
@@ -10,10 +11,15 @@ type BannerPropsType = {
 const Banner = (props: BannerPropsType) => {
     const [page, setPage] = useState(1);
     const { location, banners } = props
+    const navigate = useNavigate();
+
+    function handleLocationClick() {
+        navigate('/nearby')
+    }
 
     return (
         <div className='banner'>
-            <h3 className='location'>
+            <h3 className='location' onClick={handleLocationClick}>
                 <span className='iconfont'>&#xe67c;</span>
                 {location?.address || ''}
             </h3>
