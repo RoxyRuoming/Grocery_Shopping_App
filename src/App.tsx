@@ -10,6 +10,7 @@ import Register from './containers/Account/register';
 import Account from './containers/Account';
 import Home from './containers/Home';
 import Nearby from './containers/Nearby';
+import Search from './containers/Search';
 
 // json-style router
 const Router = createHashRouter([{
@@ -28,9 +29,12 @@ const Router = createHashRouter([{
 }, {
   path: '/home',
   element: <Home />
-},{
+}, {
   path: '/nearby',
   element: <Nearby />
+}, {
+  path: '/search',
+  element: <Search />
 }])
 
 const App = () => {

@@ -17,13 +17,17 @@ const Banner = (props: BannerPropsType) => {
         navigate('/nearby')
     }
 
+    function handleSearchClick() {
+        navigate('/search')
+    }
+
     return (
         <div className='banner'>
             <h3 className='location' onClick={handleLocationClick}>
                 <span className='iconfont'>&#xe650;</span>
                 {location?.address || ''}
             </h3>
-            <div className='search'>
+            <div className='search' onClick={handleSearchClick}>
                 <span className='iconfont'>
                     &#xe64e;
                 </span>
