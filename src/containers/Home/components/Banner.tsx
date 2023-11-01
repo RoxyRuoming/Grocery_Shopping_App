@@ -20,7 +20,7 @@ const Banner = (props: BannerPropsType) => {
     return (
         <div className='banner'>
             <h3 className='location' onClick={handleLocationClick}>
-                <span className='iconfont'>&#xe67c;</span>
+                <span className='iconfont'>&#xe650;</span>
                 {location?.address || ''}
             </h3>
             <div className='search'>

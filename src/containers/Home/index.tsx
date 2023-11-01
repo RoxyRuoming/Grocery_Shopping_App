@@ -7,19 +7,24 @@ import Banner from './components/Banner';
 import Categories from './components/Categories';
 import Card from './components/Card';
 
-const localLocation = localStorage.getItem('location');
-const locationHistory = localLocation ? JSON.parse(localLocation): null;
-
 const defaultRequestData = {
   url: '/home.json',
   method: 'POST',
   data: {
-    latitude: locationHistory ? locationHistory.latitude : 37.7304167,
-    longitude: locationHistory ? locationHistory.longitude: -122.384425,
+    latitude: 37.7304167,
+    longitude: -122.384425,
   }
 }
 
 const Home = () => {
+  const localLocation = localStorage.getItem('location');
+  const locationHistory = localLocation ? JSON.parse(localLocation): null;
+
+  if(locationHistory) {
+    defaultRequestData.data.latitude = locationHistory.latitude;
+    defaultRequestData.data.longitude = locationHistory.longitude;
+  }
+
   const [ requestData, setRequestData ] = useState(defaultRequestData);
   const { data } = useRequest<ResponseType>(requestData);
 
@@ -41,7 +46,7 @@ const Home = () => {
         console.log(error);
       }, {timeout: 500})
     }
-  }, []);
+  }, [locationHistory]);
   
   let location, banners, categories, freshes = undefined;
   const dataResult = data?.data;

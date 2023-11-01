@@ -2,7 +2,7 @@ import './style.scss';
 import useRequest from '../../hooks/useRequest';
 import { ResponseType } from './types';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const localLocation = localStorage.getItem('location');
 const locationHistory = localLocation ? JSON.parse(localLocation): null;
@@ -36,18 +36,21 @@ const Nearby = () => {
   return (
     <div className="page nearby-page">
       <div className='title'>
-        <div className='iconfont title-icon'>&#xe601;</div>Shop Transfer
+        <Link to='/home'>
+          <div className='iconfont title-icon'>&#xe601;</div>
+        </Link>
+        Shop Transfer
       </div>
       <div className='search'>
         <div className='search-icon iconfont'>&#xe64e;</div>
         <input
           className='search-input'
-          placeholder='please input the address'
+          placeholder='please input your address'
           value={keyword}
           onChange={(e)=>{ setKeyword(e.target.value)}}
         />
       </div>
-      <div className='subtitle'>transfer shop</div>
+      <div className='subtitle'>nearby shop</div>
        <ul className='list'>
         {
           list.map(item => {
